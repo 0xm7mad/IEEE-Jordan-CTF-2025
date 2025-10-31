@@ -293,6 +293,7 @@ Rick left another obfuscated loader that rebuilds a hidden message from scramble
 <img width="723" height="665" alt="image" src="https://github.com/user-attachments/assets/aa53c59f-0c18-4aa7-9692-a5f98cd67331" />
 So its C++
 ## Now to IDA  go throught these function -> Start -> SEH -> main -> main_0 
+
 ```
 int __cdecl main_0(int argc, const char **argv, const char **envp)
 {
@@ -332,6 +333,7 @@ int __cdecl main_0(int argc, const char **argv, const char **envp)
   return 0;
 }
 ```
+
 We found this code.. the code is about shell loader -> load the shell into lpAddress then make a Virtuallprotect for it and then run it here "   (lpAddress)(); " 
 ##So its time for Dynamic Analysis 
 ## I will set a break point on (lpAddress)(); and enter it 
@@ -339,7 +341,8 @@ We found this code.. the code is about shell loader -> load the shell into lpAdd
  Then jmp ! 
  <img width="1154" height="514" alt="image" src="https://github.com/user-attachments/assets/0026112d-5b2f-481a-be1b-9ccfd386c99c" />
  here is the the decryption process of the shell and after that we will enter the shell 
- ```
+ 
+```
 ug048:00F98881 xor     ecx, ecx
 debug048:00F98883 mov     eax, fs:[ecx+30h]
 debug048:00F98887 mov     eax, [eax+0Ch]
@@ -431,6 +434,7 @@ debug048:00F98956 mov     esi, esp
 debug048:00F98958 add     esi, 4
 debug048:00F9895B retn
 ```
+
 The shell we got : if you trace throught it you will found the flag as hex in the registers 
 <img width="1212" height="610" alt="image" src="https://github.com/user-attachments/assets/de2c25ae-c504-471e-8bcf-7d25b2d6d2e8" />
 ## The flag : flag{shellcoded}
