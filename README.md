@@ -282,3 +282,157 @@ so Ans = 104.28.216.42
 ## Tenth Quest. : Kernel module loaded during incident  : From the linux.bash we found that is "lime" as he load it while the attack 
 ## elevth Quest. : PID of the malicious miner process : From the first pslist its "29434"
 ## Final Quest.  : Complete process chain from sshd to miner : so the attack started through sshd then bash then the xmgir so  ( sshd -> bash -> xmgir ) you can identify it using pslist 
+
+
+
+# Rev Echoes of Rick ( Second Blood )
+Description
+Rick left another obfuscated loader that rebuilds a hidden message from scrambled 4‑byte chunks. Your task: reverse the program and recover the hidden flag using static and dynamic analysis techniques.
+##As my process of work every time :
+## Start with Detect it easy 
+<img width="723" height="665" alt="image" src="https://github.com/user-attachments/assets/aa53c59f-0c18-4aa7-9692-a5f98cd67331" />
+So its C++
+## Now to IDA  go throught these function -> Start -> SEH -> main -> main_0 
+```
+int __cdecl main_0(int argc, const char **argv, const char **envp)
+{
+  _BYTE v4[12]; // [esp+DCh] [ebp-13Ch] BYREF
+  size_t i; // [esp+E8h] [ebp-130h]
+  void *Src; // [esp+F4h] [ebp-124h]
+  char *v7; // [esp+100h] [ebp-118h]
+  size_t Size; // [esp+10Ch] [ebp-10Ch]
+  LPVOID lpAddress; // [esp+118h] [ebp-100h]
+  DWORD flOldProtect[3]; // [esp+124h] [ebp-F4h] BYREF
+  int sub_485E50_1[55]; // [esp+130h] [ebp-E8h] BYREF
+  __int16 v12; // [esp+20Ch] [ebp-Ch]
+  char v13; // [esp+20Eh] [ebp-Ah]
+
+  qmemcpy(sub_485E50_1, sub_485E50, sizeof(sub_485E50_1));
+  v12 = *(&loc_485F2A + 1);
+  v13 = unk_485F2E;
+  flOldProtect[0] = 0;
+  Size = 222;
+  v7 = sub_42AB72 + 1;
+  for ( Src = sub_42AB72 + *(sub_42AB72 + 1); *Src == 204; Src = Src + 1 )
+    ;
+  Src = Src + 30;
+  for ( i = 0; *(Src + i) != 144; ++i )
+    ;
+  lpAddress = sub_42C413(sub_485E50_1, Size);
+  j__realloc(lpAddress, __CFADD__(i, Size) ? -1 : i + Size);
+  VirtualProtect(lpAddress, i + Size, PAGE_EXECUTE_READWRITE, flOldProtect);
+  j__memmove(lpAddress + i, lpAddress, Size);
+  v4[0] = Size;
+  v4[1] = 0;
+  v4[2] = 0;
+  v4[3] = 0;
+  j__memmove(lpAddress, Src, i);
+  j__memmove(lpAddress + 20, v4, 4u);
+  (lpAddress)();
+  return 0;
+}
+```
+We found this code.. the code is about shell loader -> load the shell into lpAddress then make a Virtuallprotect for it and then run it here "   (lpAddress)(); " 
+##So its time for Dynamic Analysis 
+## I will set a break point on (lpAddress)(); and enter it 
+<img width="1184" height="420" alt="image" src="https://github.com/user-attachments/assets/73298434-dc12-4965-92bf-24ee4bf910c1" />
+ Then jmp ! 
+ <img width="1154" height="514" alt="image" src="https://github.com/user-attachments/assets/0026112d-5b2f-481a-be1b-9ccfd386c99c" />
+ here is the the decryption process of the shell and after that we will enter the shell 
+ ```
+ug048:00F98881 xor     ecx, ecx
+debug048:00F98883 mov     eax, fs:[ecx+30h]
+debug048:00F98887 mov     eax, [eax+0Ch]
+debug048:00F9888A mov     esi, [eax+14h]
+debug048:00F9888D lodsd
+debug048:00F9888E xchg    eax, esi
+debug048:00F9888F lodsd
+debug048:00F98890 mov     ebx, [eax+10h]
+debug048:00F98893 mov     edx, [ebx+3Ch]
+debug048:00F98896 add     edx, ebx
+debug048:00F98898 mov     edx, [edx+78h]
+debug048:00F9889B add     edx, ebx
+debug048:00F9889D mov     esi, [edx+20h]
+debug048:00F988A0 add     esi, ebx
+debug048:00F988A2 xor     ecx, ecx
+debug048:00F988A4
+debug048:00F988A4 loc_F988A4:                             ; CODE XREF: debug048:00F988AE↓j
+debug048:00F988A4                                         ; debug048:00F988B7↓j ...
+debug048:00F988A4 inc     ecx
+debug048:00F988A5 lodsd
+debug048:00F988A6 add     eax, ebx
+debug048:00F988A8 cmp     dword ptr [eax], 50746547h
+debug048:00F988AE jnz     short loc_F988A4
+debug048:00F988B0 cmp     dword ptr [eax+4], 41636F72h
+debug048:00F988B7 jnz     short loc_F988A4
+debug048:00F988B9 cmp     dword ptr [eax+8], 65726464h
+debug048:00F988C0 jnz     short loc_F988A4
+debug048:00F988C2 mov     esi, [edx+24h]
+debug048:00F988C5 add     esi, ebx
+debug048:00F988C7 mov     cx, [esi+ecx*2]
+debug048:00F988CB dec     ecx
+debug048:00F988CC mov     esi, [edx+1Ch]
+debug048:00F988CF add     esi, ebx
+debug048:00F988D1 mov     edx, [esi+ecx*4]
+debug048:00F988D4 add     edx, ebx
+debug048:00F988D6 xor     ecx, ecx
+debug048:00F988D8 push    ebx
+debug048:00F988D9 push    edx
+debug048:00F988DA push    ecx
+debug048:00F988DB push    41797261h
+debug048:00F988E0 push    7262694Ch
+debug048:00F988E5 push    64616F4Ch
+debug048:00F988EA push    esp
+debug048:00F988EB push    ebx
+debug048:00F988EC call    edx
+debug048:00F988EE add     esp, 0Ch
+debug048:00F988F1 pop     ecx
+debug048:00F988F2 push    eax
+debug048:00F988F3 push    ecx
+debug048:00F988F4 mov     cx, 6C6Ch
+debug048:00F988F8 push    ecx
+debug048:00F988F9 push    642E3233h
+debug048:00F988FE push    72657375h
+debug048:00F98903 push    esp
+debug048:00F98904 call    eax
+debug048:00F98906 add     esp, 10h
+debug048:00F98909 mov     edx, [esp+4]
+debug048:00F9890D xor     ecx, ecx
+debug048:00F9890F push    ecx
+debug048:00F98910 push    41786Fh
+debug048:00F98915 push    42656761h
+debug048:00F9891A push    7373654Dh
+debug048:00F9891F push    esp
+debug048:00F98920 push    eax
+debug048:00F98921 call    edx
+debug048:00F98923 add     esp, 10h
+debug048:00F98926 push    0
+debug048:00F98928 mov     ebx, 7D646564h
+debug048:00F9892D xor     ebx, eax
+debug048:00F9892F push    ebx
+debug048:00F98930 mov     ebx, 6F436C6Ch
+debug048:00F98935 xor     ebx, eax
+debug048:00F98937 push    ebx
+debug048:00F98938 mov     ebx, 6568537Bh
+debug048:00F9893D xor     ebx, eax
+debug048:00F9893F push    ebx
+debug048:00F98940 mov     ebx, 67616C66h
+debug048:00F98945 xor     ebx, eax
+debug048:00F98947 push    ebx
+debug048:00F98948 mov     ebx, esp
+debug048:00F9894A push    0
+debug048:00F9894C push    ebx
+debug048:00F9894D push    ebx
+debug048:00F9894E push    0
+debug048:00F98950 call    eax
+debug048:00F98952 add     esp, 20h
+debug048:00F98955 pop     ebp
+debug048:00F98956 mov     esi, esp
+debug048:00F98958 add     esi, 4
+debug048:00F9895B retn
+```
+The shell we got : if you trace throught it you will found the flag as hex in the registers 
+<img width="1212" height="610" alt="image" src="https://github.com/user-attachments/assets/de2c25ae-c504-471e-8bcf-7d25b2d6d2e8" />
+## The flag : flag{shellcoded}
+
+
