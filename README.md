@@ -279,6 +279,6 @@ MESSAGE=Accepted password for root from 104.28.248.39 port 12642 ssh2
 ```
 I found among these ssh a Line with " MESSAGE=..." , i thought maybe this from config or the ssh he was done because its without timestamp and the other is not from the attack time 
 so Ans = 104.28.216.42
-# Tenth Quest. : Kernel module loaded during incident  : From the linux.bash we found that is "lime" as he load it while the attack 
-# elevth Quest. : PID of the malicious miner process : From the first pslist its "29434"
-# Final Quest.  : Complete process chain from sshd to miner : so the attack started through sshd then bash then the xmgir so  ( sshd -> bash -> xmgir ) you can identify it using pslist 
+## Tenth Quest. : Kernel module loaded during incident  : From the linux.bash we found that is "lime" as he load it while the attack 
+## elevth Quest. : PID of the malicious miner process : From the first pslist its "29434"
+## Final Quest.  : Complete process chain from sshd to miner : so the attack started through sshd then bash then the xmgir so  ( sshd -> bash -> xmgir ) you can identify it using pslist 
