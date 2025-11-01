@@ -5,7 +5,7 @@ Write up for hard DFIR and Medium Rev
 
 # DFIR CryptoMiner Hunter ( First Blood )
 ## We got a memory dump created using lime so its linux 
-## Descryption : A Linux server was compromised with a cryptocurrency miner. Analyze the memory dump using Volatility 3 to uncover the attack details and submit your findings in JSON format.
+## Desecrption : A Linux server was compromised with a cryptocurrency miner. Analyze the memory dump using Volatility 3 to uncover the attack details and submit your findings in JSON format.
 ## So let's start with the first Quest.
 # PPID of the malicious cryptocurrency miner ( lets first open the Vol3 and try pslist to identify the mallicious process and its Parent process ) 
 The output of vol3
