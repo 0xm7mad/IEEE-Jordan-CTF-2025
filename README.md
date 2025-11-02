@@ -288,7 +288,7 @@ so Ans = 104.28.216.42
 # Rev Echoes of Rick ( Second Blood )
 Description
 Rick left another obfuscated loader that rebuilds a hidden message from scrambled 4‑byte chunks. Your task: reverse the program and recover the hidden flag using static and dynamic analysis techniques.
-##As my process of work every time :
+## As my process of work every time :
 ## Start with Detect it easy 
 <img width="723" height="665" alt="image" src="https://github.com/user-attachments/assets/aa53c59f-0c18-4aa7-9692-a5f98cd67331" />
 So its C++
